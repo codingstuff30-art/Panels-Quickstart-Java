@@ -44,7 +44,6 @@ public class DriveSubsystem {
 
 
     public double getCurrentHeadingDeg() {
-        pinpoint.update(GoBildaPinpointDriver.readData.ONLY_UPDATE_HEADING);
         double headingDeg = Math.toDegrees(pinpoint.getHeading());
         return Math.round(headingDeg * 10.0) / 10.0;
     }
@@ -108,6 +107,7 @@ public class DriveSubsystem {
         rightBack.setPower(backRightPower);
         leftFront.setPower(frontLeftPower);
         rightFront.setPower(frontRightPower);
+        pinpoint.update();
     }
     public void slowDown(double SPEED){
         leftFront.setPower(SPEED);

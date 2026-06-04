@@ -1,29 +1,20 @@
 package org.firstinspires.ftc.teamcode.Teleops;
-import static org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit.AMPS;
-
-import android.provider.Settings;
 
 //import com.acmerobotics.dashboard.FtcDashboard;
 //import com.arcrobotics.ftclib.gamepad.GamepadEx;
 //import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.bylazar.gamepad.PanelsGamepad;
 import com.bylazar.telemetry.PanelsTelemetry;
-import com.bylazar.telemetry.JoinedTelemetry;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+        import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 //import com.bylazar.gamepad.Gamepad;
-import com.bylazar.panels.Panels;
-import com.bylazar.panels.PanelsConfig;
-import com.qualcomm.robotcore.hardware.Gamepad;
+        import com.qualcomm.robotcore.hardware.Gamepad;
 
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Subsystems.DriveSubsystem;
+        import org.firstinspires.ftc.teamcode.Subsystems.DriveSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "FIlthyClanker")
 
-class FilthyClanker extends OpMode {
+public class TeleOp extends OpMode {
 
     private DriveSubsystem myDriveTrain;
     private Shooter myShooter;
@@ -74,22 +65,22 @@ class FilthyClanker extends OpMode {
             myShooter.servopos1();
         }*/
 
-        if ( -0.4 < gamepad1.left_stick_x && gamepad1.left_stick_x < 0.4){
+        if ( -0.1 < gamepad1.left_stick_x && gamepad1.left_stick_x < 0.1){
             x = 0;
-        }else if (-0.4 > gamepad1.left_stick_x || gamepad1.left_stick_x > 0.4){
-            x = gamepad1.left_stick_x;
+        }else if (-0.1 > gamepad1.left_stick_x || gamepad1.left_stick_x > 0.1){
+            x = gamepad1.left_stick_x/10;
         }
 
-        if (-0.4 < -gamepad1.left_stick_y && -gamepad1.left_stick_y < 0.4){
+        if (-0.1 < -gamepad1.left_stick_y && -gamepad1.left_stick_y < 0.1){
             y = 0;
-        }else if (-0.4 > -gamepad1.left_stick_y || -gamepad1.left_stick_y > 0.4){
-            y = -gamepad1.left_stick_y;
+        }else if (-0.1 > -gamepad1.left_stick_y || -gamepad1.left_stick_y > 0.1){
+            y = -gamepad1.left_stick_y/10;
         }
 
-        if (-0.4 < gamepad1.right_stick_x && gamepad1.right_stick_x < 0.4){
+        if (-0.1 < gamepad1.right_stick_x && gamepad1.right_stick_x < 0.1){
             rx = 0;
-        } else if (-0.4 > gamepad1.right_stick_x || gamepad1.right_stick_x > 0.4) {
-            rx = gamepad1.right_stick_x;
+        } else if (-0.1 > gamepad1.right_stick_x || gamepad1.right_stick_x > 0.1) {
+            rx = gamepad1.right_stick_x/10;
         }
 
         myDriveTrain.drive2(x, y, rx);
