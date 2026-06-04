@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.SampleCode;
+/*package org.firstinspires.ftc.teamcode.SampleCode;
 
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
  *  The purpose of this class is to demonstrate how to program an elevator while using a PID
  *  controller. Adding @Config allows you to modify values in the FTCDashboard by declaring them here
  *  as public static instance variables.
- */
+ *
 public class PID_Motor {
     private final DcMotorEx motor;
     private int targetPosition = 0;
@@ -60,7 +60,7 @@ public class PID_Motor {
      * method and move between 2 set points of your choosing. Gradually increase P, starting from
      * .00001 until the error is low. There should be no oscillation. Then gradually increase D,
      * starting from .000001 until the error is almost 0.
-     */
+     *
     public void update() {
         controller.setPID(kP, kI, kD);
         double output = this.controller.calculate(motor.getCurrentPosition(), this.targetPosition);
@@ -73,7 +73,7 @@ public class PID_Motor {
      * @param input the value to be limited
      * @param limiter the max value the input can be
      * @return the limited input
-     */
+     *
     private double limiter(double input, double limiter){
         if (input > limiter) {
             input = limiter;
@@ -83,3 +83,4 @@ public class PID_Motor {
         return input;
     }
 }
+*/

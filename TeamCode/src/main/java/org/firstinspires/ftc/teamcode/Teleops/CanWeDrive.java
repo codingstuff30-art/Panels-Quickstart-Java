@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Teleops;
+/*package org.firstinspires.ftc.teamcode.Teleops;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -26,7 +26,7 @@ public class CanWeDrive extends OpMode {
 
     /*
      * Code to run ONCE when the driver hits INIT
-     */
+     *
     @Override
     public void init() {
         dashboardTelemetry.addData("Status", "Initialized");
@@ -43,14 +43,14 @@ public class CanWeDrive extends OpMode {
 
     /*
      * Code to run REPEATEDLY after the driver hits INIT, but before they hit START
-     */
+     *
     @Override
     public void init_loop() {
     }
 
     /*
      * Code to run ONCE when the driver hits START
-     */
+     *
     @Override
     public void start() {
         runtime.reset();
@@ -58,7 +58,7 @@ public class CanWeDrive extends OpMode {
 
     /*
      * Code to run REPEATEDLY after the driver hits START but before they hit STOP
-     */
+     *
     @Override
     public void loop() {
         //update gamepad values
@@ -74,27 +74,27 @@ public class CanWeDrive extends OpMode {
         - Left/Right Movement: -gamepad1.left_stick_x
         - Turn Left/Right Movement: -gamepad1.right_stick_x
         - Robot-Centric Mode: true
-        */
+        *
 
         drive.drive2(digitalTransmission(-left_x), digitalTransmission(-left_y), right_x);
 
 
 
-        /* Update Telemetry to the Driver Hub */
+        /* Update Telemetry to the Driver Hub *
         dashboardTelemetry.addData("Status", "Run Time: " + runtime.toString());
         dashboardTelemetry.update();
     }
 
     /*
      * Code to run ONCE after the driver hits STOP
-     */
+     *
     @Override
     public void stop() {
     }
 
     /**
      * removes the analog drift
-     */
+     *
     private double zeroAnalogInput(double input){
         if (Math.abs(input) < 0.05){
             input = 0;
@@ -111,3 +111,4 @@ public class CanWeDrive extends OpMode {
         return .5*input;
     }
 }
+*/

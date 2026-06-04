@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.SampleCode;
+/*package org.firstinspires.ftc.teamcode.SampleCode;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -14,7 +14,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  *
  *  Before servos are physically installed, they must be set to their midpoint and installed such
  *  the midpoint is mid way between the endpoints that you would like the servo to move to.
- */
+
 @Config
 public class Servo_Enhanced {
     private final ServoImplEx servo;
@@ -33,7 +33,7 @@ public class Servo_Enhanced {
      * this is the constructor, use it to set initial values to instant variables. If there
      * are 2 servos attached to the same joint, they must be at the same place at the same
      * time and rotating in the same direction.
-     */
+
     public Servo_Enhanced(HardwareMap hardwareMap) {
         servo = hardwareMap.get(ServoImplEx.class, "[device name in robot config]");
 
@@ -49,7 +49,7 @@ public class Servo_Enhanced {
     /**
      * make one of these for every position you would like the servo to go to. Feel free to
      * rename the method.
-     */
+
     public void goFromPosition1ToPosition2() {
         setTarget(position2, timeFromPosition1ToPosition2);
     }
@@ -61,7 +61,7 @@ public class Servo_Enhanced {
      * @param input value between 0 and 1, make sure servo can handle it
      * @param t     time it will take to go from current location to new location in milliseconds,
      *              a value of 0 will move at the max servo speed
-     */
+
     public void setTarget(double input, int t) {
         if (input != currentPos) {
             target = input;
@@ -74,7 +74,7 @@ public class Servo_Enhanced {
     /**
      * standard update function that will move the wrist if not at the desired location.
      * you call this method in your main program's loop.
-     */
+
     public void update() {
         double duration = timer.milliseconds();
         if (Math.abs(currentPos - target) > .01 && duration < time) {
@@ -87,4 +87,4 @@ public class Servo_Enhanced {
 
     }
 }
-
+*/

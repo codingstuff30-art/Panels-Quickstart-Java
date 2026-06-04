@@ -1,30 +1,40 @@
 package org.firstinspires.ftc.teamcode.Teleops;
+import static org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit.AMPS;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.arcrobotics.ftclib.gamepad.GamepadEx;
-import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import android.provider.Settings;
+
+//import com.acmerobotics.dashboard.FtcDashboard;
+//import com.arcrobotics.ftclib.gamepad.GamepadEx;
+//import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.bylazar.gamepad.PanelsGamepad;
+import com.bylazar.telemetry.PanelsTelemetry;
+import com.bylazar.telemetry.JoinedTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+//import com.bylazar.gamepad.Gamepad;
+import com.bylazar.panels.Panels;
+import com.bylazar.panels.PanelsConfig;
+import com.qualcomm.robotcore.hardware.Gamepad;
+
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Subsystems.DriveSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "FIlthy Clanker")
-//@Disabled
-public class TeleOp extends OpMode {
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "FIlthyClanker")
+
+class FilthyClanker extends OpMode {
 
     private DriveSubsystem myDriveTrain;
     private Shooter myShooter;
-    private GamepadEx g1;
-
-    private FtcDashboard dashboard = FtcDashboard.getInstance();
-    private Telemetry dashboardTelemetry = dashboard.getTelemetry();
+    private Gamepad g1;
+    private PanelsTelemetry dashboard = PanelsTelemetry.INSTANCE;
 
     @Override
     public void init() {
         myDriveTrain = new DriveSubsystem(hardwareMap);
-        myShooter   = new Shooter(hardwareMap);
-        g1          = new GamepadEx(gamepad1);
+        myShooter    = new Shooter(hardwareMap);
+        g1           = new Gamepad();
 
         myDriveTrain.setHeadingToMaintain(0);
 
@@ -50,12 +60,11 @@ public class TeleOp extends OpMode {
         double x = 0;
         double rx = gamepad1.right_stick_x;
 
-        g1.readButtons();
 
-        if (g1.wasJustPressed(GamepadKeys.Button.B)) {
+        if (g1.bWasPressed()) {
             myShooter.toggleMotor();
         }
-        if (g1.wasJustPressed(GamepadKeys.Button.A)){
+        if (g1.aWasPressed()){
             myShooter.togglePickUp();
         }
 
@@ -86,17 +95,13 @@ public class TeleOp extends OpMode {
         myDriveTrain.drive2(x, y, rx);
 
 
-        if (g1.wasJustPressed(GamepadKeys.Button.Y)) {
+        if (g1.yWasPressed()) {
             myDriveTrain.setHeadingToMaintain(0);
         }
 
         telemetry.addData("Target Heading (deg)", myDriveTrain.getHeadingToMaintain());
         telemetry.addData("Current Heading (deg)", myDriveTrain.getCurrentHeadingDeg());
         telemetry.update();
-
-        dashboardTelemetry.addData("Target Heading (deg)", myDriveTrain.getHeadingToMaintain());
-        dashboardTelemetry.addData("Current Heading (deg)", myDriveTrain.getCurrentHeadingDeg());
-        dashboardTelemetry.update();
     }
 
     @Override

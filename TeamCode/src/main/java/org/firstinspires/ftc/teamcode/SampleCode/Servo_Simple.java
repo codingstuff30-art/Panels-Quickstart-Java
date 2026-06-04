@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.SampleCode;
+/*package org.firstinspires.ftc.teamcode.SampleCode;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -14,7 +14,7 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
  *
  *  Before servos are physically installed, they must be set to their midpoint and installed such
  *  the midpoint is mid way between the endpoints that you would like the servo to move to.
- */
+ *
 
 @Config
 public class Servo_Simple {
@@ -26,7 +26,7 @@ public class Servo_Simple {
 
     /**
      * this is the constructor, use it to set initial values to instant variables
-     */
+     *
     public Servo_Simple(HardwareMap hardwareMap){
         servo = hardwareMap.get(ServoImplEx.class,"[device name in robot config]");
 
@@ -40,8 +40,9 @@ public class Servo_Simple {
     /**
      * make one of these for every position you would like the servo to go to. Feel free to rename
      * the method.
-     */
+     *
     public void goToPosition1(){
         servo.setPosition(position1);
     }
 }
+*/

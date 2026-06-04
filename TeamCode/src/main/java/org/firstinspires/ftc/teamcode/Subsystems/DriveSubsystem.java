@@ -1,14 +1,17 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
-import com.acmerobotics.dashboard.config.Config;
+//import com.acmerobotics.dashboard.config.Config;
+import androidx.annotation.NonNull;
+
+import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import javax.annotation.Nonnull;
+//import javax.annotation.Nonnull;
 
-@Config
+@Configurable
 public class DriveSubsystem {
     public static double correctionMultiplier      = 1.0;
     public static double ANGULAR_TOLERANCE_DEGREES = 2.0;
@@ -16,7 +19,7 @@ public class DriveSubsystem {
     private final DcMotorEx leftFront, leftBack, rightBack, rightFront;
     public GoBildaPinpointDriver pinpoint;
     private double headingToMaintain = 0.0;
-    public DriveSubsystem(@Nonnull HardwareMap hardwareMap) {
+    public DriveSubsystem(@NonNull HardwareMap hardwareMap) {
         leftFront  = hardwareMap.get(DcMotorEx.class, "leftFront");
         leftBack   = hardwareMap.get(DcMotorEx.class, "leftRear");
         rightBack  = hardwareMap.get(DcMotorEx.class, "rightRear");
