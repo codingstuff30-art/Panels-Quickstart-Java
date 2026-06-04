@@ -6,7 +6,8 @@ package org.firstinspires.ftc.teamcode.Teleops;
 import com.bylazar.telemetry.PanelsTelemetry;
         import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 //import com.bylazar.gamepad.Gamepad;
-        import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Gamepad;
 
 
         import org.firstinspires.ftc.teamcode.Subsystems.DriveSubsystem;
@@ -20,6 +21,7 @@ public class TeleOp extends OpMode {
     private Shooter myShooter;
     private Gamepad g1;
     private PanelsTelemetry dashboard = PanelsTelemetry.INSTANCE;
+
 
     @Override
     public void init() {
@@ -37,7 +39,7 @@ public class TeleOp extends OpMode {
     public void init_loop() {
         telemetry.addData("Target Heading (deg)", myDriveTrain.getHeadingToMaintain());
         telemetry.addData("Current Heading (deg)", myDriveTrain.getCurrentHeadingDeg());
-        telemetry.update(); 
+        telemetry.update();
     }
 
     @Override
@@ -55,6 +57,7 @@ public class TeleOp extends OpMode {
         if (g1.bWasPressed()) {
             myShooter.toggleMotor();
         }
+
         if (g1.aWasPressed()){
             myShooter.togglePickUp();
         }
@@ -90,9 +93,6 @@ public class TeleOp extends OpMode {
             myDriveTrain.setHeadingToMaintain(0);
         }
 
-        telemetry.addData("Target Heading (deg)", myDriveTrain.getHeadingToMaintain());
-        telemetry.addData("Current Heading (deg)", myDriveTrain.getCurrentHeadingDeg());
-        telemetry.update();
     }
 
     @Override
