@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Teleops;
+/*package org.firstinspires.ftc.teamcode.Teleops;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -50,3 +50,4 @@ public class atou extends LinearOpMode{
         sleep(1000);
     }
 }
+*/

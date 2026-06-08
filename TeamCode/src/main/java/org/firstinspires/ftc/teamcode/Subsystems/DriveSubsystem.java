@@ -1,127 +1,98 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
-//import com.acmerobotics.dashboard.config.Config;
-import androidx.annotation.NonNull;
-
-import com.bylazar.configurables.annotations.Configurable;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.IMU;
 
-//import javax.annotation.Nonnull;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
-@Configurable
+/**
+ * Field-centric mecanum drive subsystem.
+ *
+ * Usage in an OpMode:
+ *   DriveSubsystem drive = new DriveSubsystem(hardwareMap);
+ *   drive.drive(y, x, rx);   // call every loop tick
+ *   drive.resetYaw();         // call when the driver presses the reset button
+ */
 public class DriveSubsystem {
-    public static double correctionMultiplier      = 1.0;
-    public static double ANGULAR_TOLERANCE_DEGREES = 2.0;
-    public static double rotMulti                  = 1.1;
-    private final DcMotorEx leftFront, leftBack, rightBack, rightFront;
-    public GoBildaPinpointDriver pinpoint;
-    private double headingToMaintain = 0.0;
+    private final DcMotor frontLeft;
+    private final DcMotor backLeft;
+    private final DcMotor frontRight;
+    private final DcMotor backRight;
 
+    private final IMU imu;
 
+    private static final double STRAFE_CORRECTION = 1.1;
 
-    public DriveSubsystem(@NonNull HardwareMap hardwareMap) {
-        leftFront  = hardwareMap.get(DcMotorEx.class, "leftFront");
-        leftBack   = hardwareMap.get(DcMotorEx.class, "leftRear");
-        rightBack  = hardwareMap.get(DcMotorEx.class, "rightRear");
-        rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
+    public DriveSubsystem(HardwareMap hardwareMap) {
 
-        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontLeft  = hardwareMap.dcMotor.get("frontLeftMotor");
+        backLeft   = hardwareMap.dcMotor.get("backLeftMotor");
+        frontRight = hardwareMap.dcMotor.get("frontRightMotor");
+        backRight  = hardwareMap.dcMotor.get("backRightMotor");
 
-        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
-        pinpoint.resetPosAndIMU();
+        imu = hardwareMap.get(IMU.class, "imu");
+
+        IMU.Parameters imuParameters = new IMU.Parameters(
+                new RevHubOrientationOnRobot(
+                        RevHubOrientationOnRobot.LogoFacingDirection.UP,
+                        RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
+
+        imu.initialize(imuParameters);
     }
 
+    public void drive(double y, double x, double rx) {
 
-    public double getCurrentHeadingDeg() {
-        double headingDeg = Math.toDegrees(pinpoint.getHeading());
-        return Math.round(headingDeg * 10.0) / 10.0;
-    }
+        double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 
-    public void setHeadingToMaintain(double headingDeg) {
-        this.headingToMaintain = headingDeg;
-    }
+        // Rotate the joystick vector into the robot's frame so that "forward"
+        // always means away from the driver, regardless of robot heading.
+        double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
+        double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
 
-    public double getHeadingToMaintain() {
-        return headingToMaintain;
-    }
+        // Compensate for imperfect lateral efficiency
+        rotX *= STRAFE_CORRECTION;
 
-    private double getHeadingError(double currentDeg) {
-        double error = headingToMaintain - currentDeg;
-        error = ((error + 180.0) % 360.0 + 360.0) % 360.0 - 180.0;
-        return error;
-    }
-    private double limiter(double input, double lim) {
-        if (input > lim) return lim;
-        if (input < -lim) return -lim;
-        return input;
-    }
+        // Scale all powers so that no motor exceeds ±1
+        double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
 
-    public void drive2(double x, double y, double rx) {
-        x = -x;
-        y = -y;
-
-        double robotHeadingRad = pinpoint.getHeading();
-        double robotHeadingDeg = getCurrentHeadingDeg();
-
-        if (Math.abs(rx) < 1e-3) {
-            double errorDeg = getHeadingError(robotHeadingDeg);
-            boolean withinTolerance = Math.abs(errorDeg) < ANGULAR_TOLERANCE_DEGREES;
-
-            if (!withinTolerance) {
-                double absError = Math.abs(errorDeg);
-                double rotSpeed;
-                if (absError > 20) {
-                    rotSpeed = 0.5 ;
-                } else {
-                    rotSpeed = correctionMultiplier * absError * absError / 800.0;
-                }
-                rx = limiter(Math.signum(errorDeg) * rotSpeed, rotSpeed);
-            }
-
-        } else {
-            headingToMaintain = robotHeadingDeg;
-        }
-
-        double rotX = x * Math.cos(-robotHeadingRad) - y * Math.sin(-robotHeadingRad);
-        double rotY = x * Math.sin(-robotHeadingRad) + y * Math.cos(-robotHeadingRad);
-        rotX = rotX * rotMulti;
-
-        double denominator = Math.max(Math.abs(rotX) + Math.abs(rotY) + Math.abs(rx), 1.0);
         double frontLeftPower  = (rotY + rotX + rx) / denominator;
-        double frontRightPower = (rotY - rotX - rx) / denominator;
         double backLeftPower   = (rotY - rotX + rx) / denominator;
+        double frontRightPower = (rotY - rotX - rx) / denominator;
         double backRightPower  = (rotY + rotX - rx) / denominator;
 
-        leftBack.setPower(backLeftPower);
-        rightBack.setPower(backRightPower);
-        leftFront.setPower(frontLeftPower);
-        rightFront.setPower(frontRightPower);
-        pinpoint.update();
+        frontLeft.setPower(frontLeftPower);
+        backLeft.setPower(backLeftPower);
+        frontRight.setPower(frontRightPower);
+        backRight.setPower(backRightPower);
     }
-    public void slowDown(double SPEED){
-        leftFront.setPower(SPEED);
-        leftBack.setPower(SPEED);
-        rightFront.setPower(SPEED);
-        rightBack.setPower(SPEED);
+
+    public void stop() {
+        frontLeft.setPower(0);
+        backLeft.setPower(0);
+        frontRight.setPower(0);
+        backRight.setPower(0);
     }
-    public void stopMotors() {
-        leftFront.setPower(0);
-        leftBack.setPower(0);
-        rightFront.setPower(0);
-        rightBack.setPower(0);
+
+    public void resetYaw() {
+        imu.resetYaw();
+    }
+
+    public double getHeadingRadians() {
+        return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+    }
+
+    public double getHeadingDegrees() {
+        return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
     }
 }
